@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(value = "user-server")
+@FeignClient(value = "user-server", fallback = ConsumerClientImpl.class)
 public interface ConsumerClient {
 
     @GetMapping("/user/{ids}")
