@@ -6,6 +6,7 @@ import com.study.server.UserServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -21,7 +22,7 @@ public class UserControl {
     private UserServer userServer;
 
     @GetMapping("/user/{ids}")
-    public List<User> selectUserByid(@PathVariable("ids")List<Integer> ids){
+    public List<User> selectUserByid(@PathVariable("ids")Integer[] ids){
         List<User> users=new ArrayList<>();
         for (Integer id:ids) {
             User user = userServer.selertUserById(id);
@@ -41,4 +42,26 @@ public class UserControl {
 
         return users;
     }
+
+    /*@GetMapping("/user/{ids}")
+    public List<User> selectUserByid(@PathVariable("ids")List<Integer> ids){
+        List<User> users=new ArrayList<>();
+        for (Integer id:ids) {
+            User user = userServer.selertUserById(id);
+            users.add(user);
+        }
+        ObjectMapper mapper=new ObjectMapper();
+
+        StringWriter stringWriter=new StringWriter();
+
+
+        List<User> ls=new ArrayList<>();
+        try {
+            mapper.writeValue(stringWriter,users);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }*/
 }
