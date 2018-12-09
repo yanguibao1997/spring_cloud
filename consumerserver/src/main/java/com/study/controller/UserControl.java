@@ -1,5 +1,6 @@
 package com.study.controller;
 
+import com.study.dao.ConsumerClient;
 import com.study.dao.ConsumerDao;
 import com.study.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,17 @@ public class UserControl {
     @Autowired
     private ConsumerDao consumerDao;
 
-    @GetMapping("/consumer/{ids}")
-    public List<User> selectUserByServer(@PathVariable("ids") List<Integer> ids){
+    @Autowired
+    private ConsumerClient consumerClient;
 
-        List<User> users = consumerDao.selectByConsumer(ids);
-        return users;
+    @GetMapping("/consumer/{ids}")
+    public List<User> selectUserByServer(@PathVariable("ids") Integer[] ids){
+
+//        List<User> users = consumerDao.selectByConsumer(ids);
+
+        List<User> users_client = consumerClient.selectUserByid(ids);
+
+
+        return users_client;
     }
 }

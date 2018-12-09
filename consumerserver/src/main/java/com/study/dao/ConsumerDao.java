@@ -1,5 +1,6 @@
 package com.study.dao;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.study.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -21,6 +23,7 @@ public class ConsumerDao {
     @Autowired
     private DiscoveryClient discoveryClient;
 
+    @HystrixCommand(fallbackMethod = "selectByConsumerBack")
     public List<User> selectByConsumer(List<Integer> ids){
         List<ServiceInstance> instances = discoveryClient.getInstances("user-server");
         ServiceInstance serviceInstance = instances.get(0);
@@ -35,6 +38,14 @@ public class ConsumerDao {
         List<User> users = restTemplate.exchange(stringBuffer.toString(), HttpMethod.GET, null, new ParameterizedTypeReference<List<User>>() {}).getBody();
 
 
+        return users;
+    }
+
+    public List<User> selectByConsumerBack(List<Integer> ids){
+        List<User> users=new ArrayList<>();
+        User user=new User();
+        user.setName("Hystrix进行了熔断了");
+        users.add(user);
         return users;
     }
 }
